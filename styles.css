@@ -1,0 +1,123 @@
+.store-info {
+    background-color: #6c757d;
+}
+
+.table th {
+    background-color: #f8f9fa;
+    vertical-align: middle;
+}
+
+.schedule-row {
+    background-color: #ffffff;
+}
+
+.schedule-row:hover {
+    background-color: #f8f9fa;
+}
+
+.time-select {
+    width: 100px;
+    margin-bottom: 5px;
+}
+
+#deleteStore {
+    display: none;
+}
+
+.user-superadmin #deleteStore {
+    display: inline-block;
+}
+
+.day-off-container {
+    margin-top: 8px;
+}
+
+.schedule-cell {
+    min-width: 150px;
+}
+
+.navbar .btn-outline-light:hover {
+    color: #0d6efd;
+    background-color: #fff;
+}
+
+.total-time {
+    font-weight: bold;
+}
+
+@media (max-width: 768px) {
+    .time-select {
+        width: 100%;
+    }
+    
+    .schedule-cell {
+        min-width: 120px;
+    }
+}
+
+/* Print styles */
+@media print {
+    /* Hide non-printable elements */
+    .navbar,
+    .btn,
+    .form-select,
+    .modal,
+    .employee-add-section {
+        display: none !important;
+    }
+
+    /* Show full width */
+    .container {
+        width: 100% !important;
+        max-width: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    /* Ensure table fits on page */
+    .table {
+        font-size: 11px !important;
+    }
+
+    /* Force background colors and text colors */
+    .store-info {
+        background-color: #6c757d !important;
+        color: white !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+
+    /* Ensure borders are visible */
+    .table td,
+    .table th {
+        border: 1px solid #dee2e6 !important;
+    }
+
+    /* Add page break rules */
+    .schedule-section {
+        page-break-inside: avoid;
+    }
+
+    /* Hide day off checkboxes in print */
+    .day-off-container {
+        display: none !important;
+    }
+
+    /* Format time display */
+    .schedule-cell {
+        min-width: auto !important;
+    }
+
+    /* Show times as text instead of selects */
+    .time-select {
+        display: none !important;
+    }
+
+    .print-time {
+        display: block !important;
+    }
+}
+
+.print-time {
+    display: none;
+}
