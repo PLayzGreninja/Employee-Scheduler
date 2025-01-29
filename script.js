@@ -2,7 +2,7 @@
 function checkAuth() {
     const currentUser = localStorage.getItem('currentUser');
     if (!currentUser) {
-        window.location.href = 'login.html';
+        window.location.href = 'index.html';
         return null;
     }
     return JSON.parse(currentUser);
