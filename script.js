@@ -27,12 +27,14 @@ let currentUser = checkAuth();
 const timeSlots = [];
 for (let hour = 9; hour <= 21; hour++) {
     if (hour === 9) {
-        timeSlots.push('9:30 AM');
+        timeSlots.push('9:15 AM', '9:30 AM', '9:45 AM');
     } else {
         const period = hour >= 12 ? 'PM' : 'AM';
         const displayHour = hour > 12 ? hour - 12 : hour;
         timeSlots.push(`${displayHour}:00 ${period}`);
+        timeSlots.push(`${displayHour}:15 ${period}`);
         timeSlots.push(`${displayHour}:30 ${period}`);
+        timeSlots.push(`${displayHour}:45 ${period}`);
     }
 }
 
@@ -45,8 +47,10 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function initializeApp() {
-    document.body.classList.add(`user-${currentUser.role}`);
-    document.getElementById('userRole').textContent = currentUser.username;
+    if (currentUser) {
+        document.body.classList.add(`user-${currentUser.role}`);
+        document.getElementById('userRole').textContent = currentUser.username;
+    }
 }
 
 function setupEventListeners() {
@@ -116,7 +120,7 @@ function handleAddEmployee() {
         type: employeeType,
         schedule: Array(7).fill().map(() => ({
             startTime: '9:30 AM',
-            endTime: '9:30 AM',
+            endTime: '10:30 AM',
             dayOff: false
         }))
     };
@@ -232,7 +236,13 @@ function calculateEmployeeHours(row) {
 function calculateHoursBetween(startTime, endTime) {
     const startIndex = timeSlots.indexOf(startTime);
     const endIndex = timeSlots.indexOf(endTime);
-    return Math.max(0, (endIndex - startIndex) * 0.5); // Each slot is 30 minutes
+    
+    if (startIndex === -1 || endIndex === -1) {
+        console.error('Invalid time slot:', startTime, endTime);
+        return 0;
+    }
+    
+    return Math.max(0, (endIndex - startIndex) * 0.25); // Each slot is 15 minutes
 }
 
 function updateTotalHours() {
@@ -243,7 +253,10 @@ function updateTotalHours() {
         total += parseFloat(row.querySelector('.total-time').textContent) || 0;
     });
 
-    document.getElementById('totalHours').textContent = total.toFixed(2);
+    const totalHoursElement = document.getElementById('totalHours');
+    if (totalHoursElement) {
+        totalHoursElement.textContent = total.toFixed(2);
+    }
 }
 
 function saveScheduleChanges(row) {
@@ -298,7 +311,7 @@ function handleSaveStore() {
 }
 
 function handleDeleteStore() {
-    if (currentUser.role !== 'superadmin') {
+    if (currentUser.role !== 'superAdmin') {
         alert('Only super admins can delete stores');
         return;
     }
@@ -343,13 +356,6 @@ function formatDate(date) {
     return `${months[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()}`;
 }
 
-// Utility function to validate time range
-function validateTimeRange(startTime, endTime) {
-    const startIndex = timeSlots.indexOf(startTime);
-    const endIndex = timeSlots.indexOf(endTime);
-    return startIndex <= endIndex;
-}
-
 // Handle store selection change
 document.getElementById('storeSelect').addEventListener('change', function() {
     loadCurrentStoreSchedule();
@@ -387,11 +393,6 @@ if (typeof module !== 'undefined' && module.exports) {
         calculateHoursBetween,
         formatDate
     };
-}
-
-// Printing the schedule
-function setupPrintButton() {
-    document.getElementById('printSchedule').addEventListener('click', preparePrintView);
 }
 
 function preparePrintView() {
